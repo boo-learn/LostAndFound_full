@@ -2,7 +2,7 @@ import schemas
 import models
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from database import get_db
 
 router = APIRouter()
@@ -30,6 +30,24 @@ async def read_lost_item(item_id: int, db: AsyncSession = Depends(get_db)):
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return item
+
+
+@router.get("/search", response_model=list[schemas.LostItem])
+async def search_lost_items(query: str, db: AsyncSession = Depends(get_db)):
+    """
+    Вернет список потерянных предметов, у которых имя, описание или местоположение содержат слово query.
+    """
+    results = await db.execute(
+        select(models.LostItem).where(
+            or_(
+                models.LostItem.name.ilike(f"%{query}%"),
+                models.LostItem.description.ilike(f"%{query}%"),
+                models.LostItem.location.ilike(f"%{query}%"),
+            )
+        )
+    )
+    items = results.scalars().all()
+    return items
 
 
 @router.put("/{item_id}", response_model=schemas.LostItem)

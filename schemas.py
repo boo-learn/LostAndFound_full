@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
+
 # LostItems
 class LostItemBase(BaseModel):
     name: str
@@ -26,7 +27,6 @@ class LostItem(LostItemBase):
 
 # FoundtItems
 class FoundItemBase(BaseModel):
-
     name: str
     description: str = None
     found_date: datetime = None

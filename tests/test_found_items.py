@@ -76,8 +76,21 @@ async def test_delete_found_item(client, test_db, add_item):
 
 # negative tests
 @pytest.mark.asyncio
+async def test_create_found_items_incorrect_data(client):
+    item_data = {"name": "Мало данных"}
+    response = await client.post("/found_items/", json=item_data)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
 async def test_get_found_item_by_id_404(client):
     response = await client.get(f"/found_items/{1}")
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_put_found_item_by_id_404(client):
+    response = await client.put(f"/found_items/{1}", json={"name": "New name"})
     assert response.status_code == 404
 
 
