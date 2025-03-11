@@ -22,3 +22,22 @@
    ```bash
    pytest -v
    ```
+   
+## Шпаргалка
+
+### Alembic
+
+1. Создание миграции
+    ```bash
+   alembic revision --autogenerate -m "comment"
+    ```
+2. Применение миграции
+    ```bash
+   alembic upgrade head 
+    ```
+3. Откатить последнюю миграцию
+   ```bash
+   alembic downgrade head-1
+   ```
+4. 
+   
